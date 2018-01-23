@@ -19,11 +19,11 @@ const char* setup_password = "Uq2iI0uw";
 ESP8266WebServer setup_server(80);
 
 /* Don't set these wifi credentials. They are configurated at
-runtime in web interface and stored on EEPROM */
+   runtime in web interface and stored on EEPROM */
 char GLOBAL_SSID[32] = "";
 char GLOBAL_PASSWORD[32] = "";
 
-bool startup = false;
+bool startup = true;
 int GPIO_PIN = 0;
 bool TransistorState = false;
 
@@ -36,6 +36,8 @@ void setup(void) {
 	Serial.println(setup_ssid);
 	Serial.print(" server ip: ");
 	Serial.println(WiFi.softAPIP());
+
+	onSetup();
 }
 
 void loop(void) {
@@ -162,7 +164,7 @@ void handleWifiSave() {
 	setup_server.send(302, "text/plain", "");  // Empty content inhibits Content-length header so we have to close the socket ourselves.
 	setup_server.client().stop(); // Stop is needed because we sent no content length
 
-								  //Turns off access point
+	//Turns off access point
 	WiFi.softAPdisconnect(true);
 	WiFi.disconnect(true);
 	WiFi.mode(WIFI_OFF);
@@ -212,15 +214,15 @@ bool connectToWiFi(String str_ssid, String str_password) {
 
 void onConnected() {
 	//On
-	connected_server.on("/on", HTTP_PUT, handleCommandOn);
-	connected_server.on("/on%20the", HTTP_PUT, handleCommandOn);
+	connected_server.on("/on",           HTTP_PUT, handleCommandOn);
+	connected_server.on("/on%20the",     HTTP_PUT, handleCommandOn);
 
 	//Off
-	connected_server.on("/off", HTTP_PUT, handleCommandOff);
-	connected_server.on("/off%20the", HTTP_PUT, handleCommandOff);
+	connected_server.on("/off",          HTTP_PUT, handleCommandOff);
+	connected_server.on("/off%20the",    HTTP_PUT, handleCommandOff);
 
 	//Toggle
-	connected_server.on("/toggle", HTTP_PUT, handleCommandToggle);
+	connected_server.on("/toggle",       HTTP_PUT, handleCommandToggle);
 	connected_server.on("/toggle%20the", HTTP_PUT, handleCommandToggle);
 
 	//connected_server.on("/on",           handleCommandOn);
