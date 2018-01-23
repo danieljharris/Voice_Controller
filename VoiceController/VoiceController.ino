@@ -23,7 +23,7 @@ ESP8266WebServer setup_server(80);
 char GLOBAL_SSID[32] = "";
 char GLOBAL_PASSWORD[32] = "";
 
-bool startup = false;
+bool startup = true;
 int GPIO_PIN = 0;
 bool TransistorState = false;
 
@@ -36,6 +36,8 @@ void setup(void) {
 	Serial.println(setup_ssid);
 	Serial.print(" server ip: ");
 	Serial.println(WiFi.softAPIP());
+	
+	onSetup();
 }
 
 void loop(void) {
